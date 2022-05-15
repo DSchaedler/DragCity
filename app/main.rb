@@ -26,9 +26,14 @@ class Game
     state.zoom = 1
 
     state.spritesheet = 'sprites/colored_packed.png'
+    state.sprite_size = 16
+
     state.city_grid_size = 50
     state.tile_scale = 16
     state.tile = { w: state.tile_scale, h: state.tile_scale, path: state.spritesheet, tile_w: 16, tile_h: 16 }
+
+    state.cursor_sprite = { tile_x: 29 * state.sprite_size, tile_y: 14 * state.sprite_size }
+    state.grass_sprite = { tile_x: 6 * state.sprite_size, tile_y: 0 * state.sprite_size }
 
     state.city_grid = nil
     build_grid
@@ -81,10 +86,8 @@ class Game
 
         args.render_target(:city_grid).sprites << {
           x: iter_x * state.tile_scale,
-          y: iter_y * state.tile_scale,
-          tile_x: tile_x * state.tile_scale,
-          tile_y: tile_y * state.tile_scale
-        }.merge(state.tile)
+          y: iter_y * state.tile_scale
+        }.merge(state.tile).merge(state.grass_sprite)
 
         iter_y += 1
       end
