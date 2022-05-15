@@ -4,5 +4,8 @@
 			"path": "."
 		}
   ],
-  "settings": {}
+  "settings": {
+    "ruby.rubocop.configFilePath": "/home/dees/Desktop/DragonRuby Development/dragonruby3_15-linux-amd64/DragCity/rubocop.yml",
+    "files.autoSave": "afterDelay"
+  }
 }

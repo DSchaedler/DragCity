@@ -9,6 +9,7 @@
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+# Core class for the game. Tick redirects to Game.tick.
 class Game
   attr_gtk
 
@@ -32,7 +33,11 @@ class Game
     state.tile_scale = 16
     state.tile = { w: state.tile_scale, h: state.tile_scale, path: state.spritesheet, tile_w: 16, tile_h: 16 }
 
-    state.cursor_sprite = { tile_x: 29 * state.sprite_size, tile_y: 14 * state.sprite_size }
+    state.cursor = {
+      x: inputs.mouse.x, y: inputs.mouse.y,
+      grid_x: (inputs.mouse.x / 16).round(0), grid_y: (inputs.mouse.y / 16).round(0),
+      tile_x: 29 * state.sprite_size, tile_y: 14 * state.sprite_size
+    }
     state.grass_sprite = { tile_x: 6 * state.sprite_size, tile_y: 0 * state.sprite_size }
 
     state.city_grid = nil
@@ -64,6 +69,9 @@ class Game
       state.zoom -= 0.1
       state.zoom.round(1)
     end
+
+    state.cursor[:x] = inputs.mouse.x
+    state.cursor[:y] = inputs.mouse.y
   end
 
   def render
@@ -80,14 +88,13 @@ class Game
         when :road
           # Holder
         else
-          tile_x = 6
-          tile_y = 0
+          sprite = state.grass_sprite
         end
 
         args.render_target(:city_grid).sprites << {
           x: iter_x * state.tile_scale,
           y: iter_y * state.tile_scale
-        }.merge(state.tile).merge(state.grass_sprite)
+        }.merge(state.tile).merge(sprite)
 
         iter_y += 1
       end
